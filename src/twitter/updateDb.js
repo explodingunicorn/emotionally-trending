@@ -1,7 +1,7 @@
-import { db } from '../db';
-import { getTrends } from './getTrends';
-import { searchTweets } from './searchTweets';
-import { analyzeTweets } from './analyzeTweets';
+import { db } from '../db.js';
+import { getTrends } from './getTrends.js';
+import { searchTweets } from './searchTweets.js';
+import { analyzeTweets } from './analyzeTweets.js';
 
 export const updateDb = async () => {
   const lastUpdated = db.get('lastUpdated').value();

@@ -1,4 +1,4 @@
-import { TwitterClient } from '../twitterClient';
+import { TwitterClient } from '../twitterClient.js';
 
 export const searchTweets = (q) => {
   return new Promise((res, rej) => {

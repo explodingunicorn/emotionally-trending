@@ -1,4 +1,4 @@
-import { db } from "../db";
+import { db } from "../db.js";
 
 export async function get(req, res, next) {
 	// the `slug` parameter is available because this file
