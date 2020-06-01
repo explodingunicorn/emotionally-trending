@@ -1,4 +1,4 @@
-import { TwitterClient } from '../TwitterClient.js';
+import { TwitterClient } from '../twitterClient.js';
 
 export const getTrends = () => {
   return new Promise((res, rej) => {
