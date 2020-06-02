@@ -4,7 +4,8 @@ const sentiment = new Sentiment();
 const options = {
   extras: {
     no: 0,
-    yes: 0
+    yes: 0,
+    like: 0
   }
 };
 
@@ -34,12 +35,18 @@ const getMostUsedWords = wordDict => {
   return wordArr.slice(0, 5);
 };
 
+// A function that will analyze an array of tweets from the twitter api: https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
 export const analyzeTweets = tweets => {
   let scoreCount = 0,
     comparativeCount = 0;
   const positiveWordDict = {};
   const negativeWordDict = {};
 
+  if (!tweets) {
+    return false;
+  }
+
+  // Loop over each tweest and return some analyzed data from the tweets
   const data = tweets.map(tweet => {
     const { score, comparative, positive, negative } = sentiment.analyze(
       tweet.full_text,
@@ -67,6 +74,7 @@ export const analyzeTweets = tweets => {
     };
   });
 
+  // Sort the data so the most positive sentiment scores are at the end: negative => positive
   data.sort((a, b) => {
     if (a.sentiment.score > b.sentiment.score) {
       return 1;
@@ -74,12 +82,16 @@ export const analyzeTweets = tweets => {
     return -1;
   });
 
+  const scoreAvg = scoreCount / data.length;
+  const currentTime = Date.now();
+
   return {
     positiveTweets: data.slice(data.length - 1 - 10, data.length),
     negativeTweets: data.slice(0, 11),
-    scoreAvg: scoreCount / data.length,
+    scoreAvg,
     comparativeAvg: comparativeCount / data.length,
     positiveWords: getMostUsedWords(positiveWordDict),
-    negativeWords: getMostUsedWords(negativeWordDict)
+    negativeWords: getMostUsedWords(negativeWordDict),
+    scoreAvgHistory: [{ scoreAvg, time: currentTime }]
   };
 };

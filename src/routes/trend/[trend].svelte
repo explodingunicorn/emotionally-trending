@@ -15,24 +15,8 @@
   import Card from "../../components/Card.svelte";
   import Grid from "../../components/Grid.svelte";
   import EmotionScore from "../../components/EmotionScore.svelte";
+  import Tweet from "../../components/Tweet.svelte";
   export let trend;
-
-  const getParsedTweet = tweet => {
-    let text = tweet.text;
-    tweet.sentiment.negative.forEach(word => {
-      text = text.replace(
-        new RegExp(word, "ig"),
-        `<span class='negative'>${word}</span>`
-      );
-    });
-    tweet.sentiment.positive.forEach(word => {
-      text = text.replace(
-        new RegExp(word, "ig"),
-        `<span class='positive'>${word}</span>`
-      );
-    });
-    return text;
-  };
 
   const tweetGroups = [trend.positiveTweets, trend.negativeTweets];
 </script>
@@ -77,9 +61,7 @@
                 @{tweet.user.name}
               </a>
             </p>
-            <p class="tweet">
-              {@html getParsedTweet(tweet)}
-            </p>
+            <Tweet {tweet} />
             <EmotionScore score={tweet.sentiment.score} />
           </Card>
         {/each}

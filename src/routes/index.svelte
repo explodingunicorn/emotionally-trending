@@ -25,6 +25,7 @@
 <style>
   .hero {
     text-align: center;
+    padding: 48px 0;
   }
 
   p {
@@ -38,7 +39,7 @@
 </svelte:head>
 
 <div class="hero">
-  <h1>Emotionally Trending</h1>
+  <h1>Twitter is currently feeling...</h1>
   <EmotionScore score={avg} size="large" />
 </div>
 
@@ -50,18 +51,15 @@
         <a href="trend/{trend.id}">{trend.name}</a>
       </p>
       <EmotionScore score={trend.scoreAvg} />
-      <p>{trend.tweet_volume}</p>
       <Grid template="1fr 1fr">
-        <div>
-          {#each trend.positiveWords as word}
-            <WordCount positive count={word.count}>{word.word}</WordCount>
-          {/each}
-        </div>
-        <div>
-          {#each trend.negativeWords as word}
-            <WordCount negative count={word.count}>{word.word}</WordCount>
-          {/each}
-        </div>
+        <WordCount
+          title="positive words"
+          positive
+          words={trend.positiveWords} />
+        <WordCount
+          title="negative words"
+          negative
+          words={trend.negativeWords} />
       </Grid>
     </Card>
   {/each}
