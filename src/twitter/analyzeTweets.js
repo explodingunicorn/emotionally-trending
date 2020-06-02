@@ -1,15 +1,58 @@
-import * as Sentiment from 'sentiment';
+import * as Sentiment from "sentiment";
 
 const sentiment = new Sentiment();
+const options = {
+  extras: {
+    no: 0,
+    yes: 0
+  }
+};
 
-export const analyzeTweets = (tweets) => {
-  let scoreCount = 0, comparativeCount = 0;
+const countWords = (words, wordDict) => {
+  words.forEach(word => {
+    if (!wordDict[word]) {
+      wordDict[word] = 1;
+    } else {
+      wordDict[word] = wordDict[word] + 1;
+    }
+  });
+};
+
+const getMostUsedWords = wordDict => {
+  const wordArr = [];
+  Object.keys(wordDict).forEach(word => {
+    wordArr.push({ word, count: wordDict[word] });
+  });
+
+  wordArr.sort((a, b) => {
+    if (a.count < b.count) {
+      return 1;
+    }
+    return -1;
+  });
+
+  return wordArr.slice(0, 5);
+};
+
+export const analyzeTweets = tweets => {
+  let scoreCount = 0,
+    comparativeCount = 0;
+  const positiveWordDict = {};
+  const negativeWordDict = {};
+
   const data = tweets.map(tweet => {
-    const { score, comparative, positive, negative } = sentiment.analyze(tweet.full_text);
+    const { score, comparative, positive, negative } = sentiment.analyze(
+      tweet.full_text,
+      options
+    );
     // Keep track of added scores for average at the end
     scoreCount += score;
     comparativeCount += comparative;
-    return { 
+
+    countWords(positive, positiveWordDict);
+    countWords(negative, negativeWordDict);
+
+    return {
       id: tweet.id,
       sentiment: { score, comparative, positive, negative },
       text: tweet.full_text,
@@ -32,9 +75,11 @@ export const analyzeTweets = (tweets) => {
   });
 
   return {
-    positiveTweets: data.slice((data.length - 1) - 10, data.length),
+    positiveTweets: data.slice(data.length - 1 - 10, data.length),
     negativeTweets: data.slice(0, 11),
-    scoreAvg: scoreCount/data.length,
-    comparativeAvg: comparativeCount/data.length 
+    scoreAvg: scoreCount / data.length,
+    comparativeAvg: comparativeCount / data.length,
+    positiveWords: getMostUsedWords(positiveWordDict),
+    negativeWords: getMostUsedWords(negativeWordDict)
   };
-}
+};

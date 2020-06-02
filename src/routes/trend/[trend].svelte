@@ -1,21 +1,38 @@
 <script context="module">
-	export async function preload({ params, query }) {
-		const res = await this.fetch(`trend/${params.trend}.json`);
-		const data = await res.json();
+  export async function preload({ params, query }) {
+    const res = await this.fetch(`trend/${params.trend}.json`);
+    const data = await res.json();
 
-		if (res.status === 200) {
-			return { trend: data };
-		} else {
-			this.error(res.status, data.message);
-		}
-	}
+    if (res.status === 200) {
+      return { trend: data };
+    } else {
+      this.error(res.status, data.message);
+    }
+  }
 </script>
 
 <script>
-  import Card from '../../components/Card.svelte';
-  import Grid from '../../components/Grid.svelte';
-  import EmotionScore from '../../components/EmotionScore.svelte';
+  import Card from "../../components/Card.svelte";
+  import Grid from "../../components/Grid.svelte";
+  import EmotionScore from "../../components/EmotionScore.svelte";
   export let trend;
+
+  const getParsedTweet = tweet => {
+    let text = tweet.text;
+    tweet.sentiment.negative.forEach(word => {
+      text = text.replace(
+        new RegExp(word, "ig"),
+        `<span class='negative'>${word}</span>`
+      );
+    });
+    tweet.sentiment.positive.forEach(word => {
+      text = text.replace(
+        new RegExp(word, "ig"),
+        `<span class='positive'>${word}</span>`
+      );
+    });
+    return text;
+  };
 
   const tweetGroups = [trend.positiveTweets, trend.negativeTweets];
 </script>
@@ -25,6 +42,16 @@
     margin-bottom: 0;
     line-height: 1.5em;
   }
+
+  .tweet :global(span.negative) {
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  .tweet :global(span.positive) {
+    color: var(--green);
+    font-weight: 600;
+  }
 </style>
 
 <svelte:head>
@@ -33,25 +60,26 @@
 
 <div>
   <h1>{trend.name}</h1>
-  <EmotionScore score={trend.scoreAvg} size='large' />
+  <EmotionScore score={trend.scoreAvg} size="large" />
 </div>
 
-<Grid template='1fr 1fr'>
+<Grid template="1fr 1fr">
   {#each tweetGroups as tweets, index}
     <div>
       <h2>Most {index ? 'Negative' : 'Positive'} Tweets</h2>
-      <Grid template='1fr'>
+      <Grid template="1fr">
         {#each tweets as tweet}
           <Card>
-            <p slot='header'>
-              <a 
-                href='https://www.twitter.com/{tweet.user.screenName}' 
-                target='_blank'
-              >
+            <p slot="header">
+              <a
+                href="https://www.twitter.com/{tweet.user.screenName}"
+                target="_blank">
                 @{tweet.user.name}
               </a>
             </p>
-            <p>{@html tweet.text}</p>
+            <p class="tweet">
+              {@html getParsedTweet(tweet)}
+            </p>
             <EmotionScore score={tweet.sentiment.score} />
           </Card>
         {/each}

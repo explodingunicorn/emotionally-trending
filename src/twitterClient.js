@@ -1,5 +1,5 @@
-import * as dotenv from 'dotenv';
-import * as Twitter from 'twitter';
+import * as dotenv from "dotenv";
+import * as Twitter from "twitter";
 
 dotenv.config();
 
