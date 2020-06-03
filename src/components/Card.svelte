@@ -2,8 +2,12 @@
   .card {
     background-color: white;
     border: 1px solid var(--black-transparent);
+    display: grid;
     border-radius: 2px;
     padding: 16px;
+    grid-template-columns: auto;
+    grid-gap: 8px;
+    justify-items: start;
   }
 
   .card:hover {
@@ -11,11 +15,12 @@
   }
 
   .card-header {
-    margin-bottom: 8px;
+    width: 100%;
   }
 
   .card-header > :global(*) {
-    margin: 0;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 </style>
 

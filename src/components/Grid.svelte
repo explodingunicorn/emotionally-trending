@@ -7,9 +7,13 @@
 <style>
   div {
     display: grid;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
   }
 </style>
 
-<div style='grid-template-columns: {template}; column-gap: {columnGap}; row-gap: {rowGap}'>
-  <slot></slot>
+<div
+  style="grid-template-columns: {template}; column-gap: {columnGap}; row-gap: {rowGap}">
+  <slot />
 </div>

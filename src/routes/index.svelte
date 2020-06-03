@@ -12,11 +12,18 @@
 </script>
 
 <script>
-  import Grid from "../components/Grid.svelte";
-  import Card from "../components/Card.svelte";
-  import EmotionScore from "../components/EmotionScore.svelte";
-  import WordCount from "../components/WordCount.svelte";
+  import Grid from '../components/Grid.svelte';
+  import EmotionScore from '../components/EmotionScore.svelte';
+  import TrendCard from '../components/TrendCard.svelte';
   export let trends;
+
+  let baseArrSize = 9;
+  let baseArr = new Array(baseArrSize);
+
+  const onShowMore = () => {
+    baseArrSize++;
+    baseArr = new Array(baseArrSize);
+  };
 
   const avg =
     trends.reduce((acc, trend) => (acc += trend.scoreAvg), 0) / trends.length;
@@ -26,11 +33,6 @@
   .hero {
     text-align: center;
     padding: 48px 0;
-  }
-
-  p {
-    font-size: 1.5rem;
-    margin: 0;
   }
 </style>
 
@@ -44,23 +46,7 @@
 </div>
 
 <Grid>
-  {#each trends as trend, index}
-    <Card>
-      <p slot="header">
-        {index + 1}.
-        <a href="trend/{trend.id}">{trend.name}</a>
-      </p>
-      <EmotionScore score={trend.scoreAvg} />
-      <Grid template="1fr 1fr">
-        <WordCount
-          title="positive words"
-          positive
-          words={trend.positiveWords} />
-        <WordCount
-          title="negative words"
-          negative
-          words={trend.negativeWords} />
-      </Grid>
-    </Card>
+  {#each baseArr as _, index}
+    <TrendCard trend={trends[index]} {index} />
   {/each}
 </Grid>

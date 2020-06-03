@@ -5,7 +5,7 @@
     let newText = text;
     words.forEach(word => {
       newText = newText.replace(
-        new RegExp(`\\s${word}(?=[\\s?.,!@#])`, "gi"),
+        new RegExp(`\\s${word}(?=[\\s?.,!@#])`, 'gi'),
         ` <span class='${type}'>$&</span>`
       );
     });
@@ -13,11 +13,15 @@
   };
 
   let text = tweet.text;
-  text = replaceWords(text, tweet.sentiment.negative, "negative");
-  text = replaceWords(text, tweet.sentiment.positive, "positive");
+  text = replaceWords(text, tweet.sentiment.negative, 'negative');
+  text = replaceWords(text, tweet.sentiment.positive, 'positive');
 </script>
 
 <style>
+  p {
+    margin: 0;
+  }
+
   p :global(span.negative) {
     color: var(--red);
     font-weight: 600;

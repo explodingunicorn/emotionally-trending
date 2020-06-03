@@ -6,10 +6,7 @@ export async function get(req, res, next) {
 
 	if (true) {
     res.setHeader('Content-Type', 'application/json');
-		const trends = db.get('trend').value();
-		db.get('trends.trends').value().forEach((trend, i) => {
-			trends[i] = { ...trends[i], ...trend };
-		});
+		const trends = db.get('trends').value();
 		res.end(JSON.stringify(trends));
 	} else {
 		next();

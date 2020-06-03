@@ -92,6 +92,7 @@ export const analyzeTweets = tweets => {
     comparativeAvg: comparativeCount / data.length,
     positiveWords: getMostUsedWords(positiveWordDict),
     negativeWords: getMostUsedWords(negativeWordDict),
-    scoreAvgHistory: [{ scoreAvg, time: currentTime }]
+    scoreAvgHistory: [{ scoreAvg, time: currentTime }],
+    createdAt: currentTime
   };
 };

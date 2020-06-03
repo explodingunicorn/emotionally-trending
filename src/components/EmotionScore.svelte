@@ -8,14 +8,14 @@
   // const baseGreen = getComputedStyle(element).getPropertyValue('--green');
   // const baseRed = getComputedStyle(element).getPropertyValue('--red');
   const greens = [
-    { color: '#14F6AA', value: 'slightly positive' }, 
+    { color: '#14F6AA', value: 'slightly positive' },
     { color: '#11D45C', value: 'positive' },
-    { color: '#1EEB33', value: 'very positive' }
+    { color: '#1EEB33', value: 'very positive' },
   ];
   const reds = [
-    { color: '#F5832F', value: 'slightly negative' }, 
+    { color: '#F5832F', value: 'slightly negative' },
     { color: '#FF6A30', value: 'negative' },
-    { color: '#E94F37', value: 'very negative' }
+    { color: '#E94F37', value: 'very negative' },
   ];
 
   if (score > 0) {
@@ -31,7 +31,10 @@
   div {
     background-color: var(--color);
     color: white;
-    display: inline-block;
+    display: inline-flex;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     text-transform: uppercase;
   }
 
@@ -50,11 +53,10 @@
   }
 </style>
 
-<div 
-  bind:this='{element}' 
-  style='--color: {selectedScore ? selectedScore.color : 'var(--black)'}'
+<div
+  bind:this={element}
+  style="--color: {selectedScore ? selectedScore.color : 'var(--black)'}"
   class:small={size === 'small'}
-  class:large={size === 'large'}
->
-  { selectedScore ? selectedScore.value : 'neutral'}
+  class:large={size === 'large'}>
+  {selectedScore ? selectedScore.value : 'neutral'}
 </div>

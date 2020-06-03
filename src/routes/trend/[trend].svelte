@@ -26,16 +26,6 @@
     margin-bottom: 0;
     line-height: 1.5em;
   }
-
-  .tweet :global(span.negative) {
-    color: var(--red);
-    font-weight: 600;
-  }
-
-  .tweet :global(span.positive) {
-    color: var(--green);
-    font-weight: 600;
-  }
 </style>
 
 <svelte:head>
