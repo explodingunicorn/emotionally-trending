@@ -1,20 +1,18 @@
 <script>
-	import Nav from '../components/Nav.svelte';
+  import Nav from '../components/Nav.svelte';
 
-	export let segment;
+  export let segment;
 </script>
 
 <style>
-	main {
-		position: relative;
-		max-width: 70%;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
+  main {
+    width: 100%;
+    box-sizing: border-box;
+  }
 </style>
 
-<Nav {segment}/>
+<Nav {segment} />
 
 <main>
-	<slot></slot>
+  <slot />
 </main>

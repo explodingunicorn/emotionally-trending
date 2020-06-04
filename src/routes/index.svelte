@@ -12,6 +12,7 @@
 </script>
 
 <script>
+  import MainContainer from '../components/MainContainer.svelte';
   import Grid from '../components/Grid.svelte';
   import EmotionScore from '../components/EmotionScore.svelte';
   import TrendCard from '../components/TrendCard.svelte';
@@ -40,13 +41,15 @@
   <title>Emotionally Trending</title>
 </svelte:head>
 
-<div class="hero">
-  <h1>Twitter is currently feeling...</h1>
-  <EmotionScore score={avg} size="large" />
-</div>
+<MainContainer>
+  <div class="hero">
+    <h1>Twitter is currently feeling...</h1>
+    <EmotionScore score={avg} size="large" />
+  </div>
 
-<Grid>
-  {#each baseArr as _, index}
-    <TrendCard trend={trends[index]} {index} />
-  {/each}
-</Grid>
+  <Grid>
+    {#each baseArr as _, index}
+      <TrendCard trend={trends[index]} {index} />
+    {/each}
+  </Grid>
+</MainContainer>
