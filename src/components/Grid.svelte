@@ -6,6 +6,7 @@
 
 <style>
   div {
+    grid-auto-rows: auto;
     display: grid;
     min-height: 0;
     min-width: 0;

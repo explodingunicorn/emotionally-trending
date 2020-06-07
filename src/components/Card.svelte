@@ -4,10 +4,12 @@
     border: 1px solid var(--black-transparent);
     display: grid;
     border-radius: 2px;
+    box-sizing: border-box;
     padding: 16px;
-    grid-template-columns: auto;
+    grid-template-columns: minmax(0, 1fr);
     grid-gap: 8px;
     justify-items: start;
+    width: 100%;
   }
 
   .card:hover {

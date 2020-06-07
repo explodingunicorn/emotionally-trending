@@ -28,10 +28,14 @@
     align-items: center;
     display: flex;
     flex-direction: row;
+    max-width: 100%;
   }
 
   .header a {
-    flex-grow: 1;
+    display: inline-block;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
 

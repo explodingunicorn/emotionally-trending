@@ -1,6 +1,7 @@
 <script>
   import Chart from 'chart.js';
   import { onMount } from 'svelte';
+  import { getCssVar } from '../utils/css.js';
   export let height = '200px';
   export let data;
   export let xKey;
@@ -19,17 +20,15 @@
 
   const setColors = () => {
     if (yData[yData.length - 1] < 0) {
-      console.log(
-        getComputedStyle(canvasEl).getPropertyValue('--red-transparent')
-      );
+      console.log(getCssVar(canvasEl, '--red-transparent'));
       colors = [
-        getComputedStyle(canvasEl).getPropertyValue('--red'),
-        getComputedStyle(canvasEl).getPropertyValue('--red-transparent'),
+        getCssVar(canvasEl, '--red'),
+        getCssVar(canvasEl, '--red-transparent'),
       ];
     } else {
       colors = [
-        getComputedStyle(canvasEl).getPropertyValue('--green'),
-        getComputedStyle(canvasEl).getPropertyValue('--green-transparent'),
+        getCssVar(canvasEl, '--green'),
+        getCssVar(canvasEl, '--green-transparent'),
       ];
     }
   };

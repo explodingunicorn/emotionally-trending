@@ -21,6 +21,12 @@
   export let trend;
 
   const tweetGroups = [trend.positiveTweets, trend.negativeTweets];
+  const alteredData = trend.scoreAvgHistory.map(score => {
+    return {
+      scoreAvg: score.scoreAvg,
+      time: new Date(score.time).toLocaleTimeString(),
+    };
+  });
 </script>
 
 <style>
@@ -47,6 +53,7 @@
 
   h1 {
     margin-bottom: 0;
+    margin-left: 16px;
   }
 
   .main {
@@ -60,8 +67,8 @@
 
 <div class="header-container">
   <div class="header">
-    <h1>{trend.name}</h1>
     <EmotionScore score={trend.scoreAvg} size="large" />
+    <h1>{trend.name}</h1>
   </div>
 </div>
 
@@ -70,7 +77,7 @@
     <Grid template="auto" columnGap="24px">
       <Card>
         <LineChart
-          data={trend.scoreAvgHistory}
+          data={alteredData}
           height="300px"
           xKey="time"
           yKey="scoreAvg"

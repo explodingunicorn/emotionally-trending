@@ -2,17 +2,24 @@
   --black: #393e41;
   --black-transparent: #393e4140;
   --white: #f6f7eb;
+
+  --gray-light: #e9ebed;
   --gray: #dde0e3;
+
+  --blue-light: #3db1f5;
   --blue: #20a4f3;
+  --blue-dark: #0b8bd5;
   --blue-transparent: #20a4f340;
+
   --red: #e94f37;
   --red-transparent: rgba(233, 79, 55, 0.6);
+
   --green: #1fea33;
   --green-transparent: #1fea3340;
 }
 
 body {
-  background-color: var(--gray);
+  background-color: var(--gray-light);
   margin: 0;
   font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;

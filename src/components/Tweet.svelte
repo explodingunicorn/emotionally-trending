@@ -5,7 +5,7 @@
     let newText = text;
     words.forEach(word => {
       newText = newText.replace(
-        new RegExp(`\\s${word}(?=[\\s?.,!@#])`, 'gi'),
+        new RegExp(`${word}(?=[\\s?.,!@#])`, 'gi'),
         ` <span class='${type}'>$&</span>`
       );
     });
