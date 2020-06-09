@@ -5,8 +5,8 @@
         return r.json();
       })
       .then(data => {
-        const trends = Object.keys(data).map(key => data[key]);
-        return { trends };
+        // const trends = Object.keys(data.trends).map(key => data.trends[key]);
+        return { trends: data.trends, avgHistory: data.avgHistory };
       });
   }
 </script>
@@ -19,9 +19,11 @@
   import Button from '../components/Button.svelte';
   import Flex from '../components/Flex.svelte';
   import ScatterChart from '../components/ScatterChart.svelte';
+  import LineChart from '../components/LineChart.svelte';
   import Card from '../components/Card.svelte';
 
   export let trends;
+  export let avgHistory;
 
   let filteredTrends = trends.filter(trend => trend.tweetVolume);
   let baseArrSize = 9;
@@ -73,13 +75,32 @@
 
 <div class="graphs">
   <MainContainer>
-    <h2>Average sentiment vs. Tweet volume</h2>
-    <Card>
-      <ScatterChart
-        data={filteredTrends}
-        xKey="tweetVolume"
-        yKey="scoreAvg"
-        height="400px" />
-    </Card>
+    <Grid template="minmax(0, 1fr)" rowGap="32px">
+      <h2>Trends of the trends</h2>
+      <div>
+        <h3>Average sentiment vs. Tweet volume</h3>
+        <Card>
+          <ScatterChart
+            data={filteredTrends}
+            xKey="tweetVolume"
+            yKey="scoreAvg"
+            height="400px" />
+        </Card>
+      </div>
+      <div>
+        <h3>Average sentimate over time</h3>
+        <Card>
+          <LineChart
+            data={avgHistory}
+            xKey="createdAt"
+            xDataTransform={data => {
+              return new Date(data).toLocaleTimeString();
+            }}
+            yKey="avg"
+            height="400px"
+            title="Average sentiment" />
+        </Card>
+      </div>
+    </Grid>
   </MainContainer>
 </div>

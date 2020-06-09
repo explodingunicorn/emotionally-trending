@@ -5,7 +5,9 @@
   export let height = '200px';
   export let data;
   export let xKey;
+  export let xDataTransform = data => data;
   export let yKey;
+  export let yDataTransform = data => data;
   export let title;
   let canvasEl;
   let chart;
@@ -14,13 +16,12 @@
   let colors;
 
   data.forEach(point => {
-    labels.push(point[xKey]);
-    yData.push(point[yKey]);
+    labels.push(xDataTransform(point[xKey]));
+    yData.push(yDataTransform(point[yKey]));
   });
 
   const setColors = () => {
     if (yData[yData.length - 1] < 0) {
-      console.log(getCssVar(canvasEl, '--red-transparent'));
       colors = [
         getCssVar(canvasEl, '--red'),
         getCssVar(canvasEl, '--red-transparent'),

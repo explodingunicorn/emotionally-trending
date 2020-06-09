@@ -14,7 +14,9 @@ export async function get(req, res, next) {
         .value();
       trends[trend].tweetVolume = trendInfo.tweet_volume;
     });
-    res.end(JSON.stringify(trends));
+
+    const avgHistory = db.get('avgHistory').value();
+    res.end(JSON.stringify({ trends, avgHistory }));
   } else {
     next();
   }

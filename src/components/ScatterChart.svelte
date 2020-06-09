@@ -39,7 +39,6 @@
         tooltips: {
           callbacks: {
             title: (item, data) => {
-              console.log(item, data);
               const { datasetIndex, index } = item[0];
               const { label } = data.datasets[datasetIndex].data[index];
               return label;
