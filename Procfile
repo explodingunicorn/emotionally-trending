@@ -1,1 +1,2 @@
-web: npm run build && node __sapper__/build
+release: npm run build
+web: node __sapper__/build
