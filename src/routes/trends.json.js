@@ -1,4 +1,5 @@
-import { db } from '../db.js';
+import { Trend } from '../models/trend.js';
+import { State } from '../models/state.js';
 
 export async function get(req, res, next) {
   // the `slug` parameter is available because this file
@@ -6,17 +7,18 @@ export async function get(req, res, next) {
 
   if (true) {
     res.setHeader('Content-Type', 'application/json');
-    const trends = db.get('trends').value();
-    Object.keys(trends).forEach((trend) => {
-      const trendInfo = db
-        .get('trending.trends')
-        .find({ name: trends[trend].name })
-        .value();
-      trends[trend].tweetVolume = trendInfo.tweet_volume;
+    const trends = await Trend.find();
+    const newTrends = trends.map((trend) => {
+      return { ...trend._doc };
     });
 
-    const avgHistory = db.get('avgHistory').value();
-    res.end(JSON.stringify({ trends, avgHistory }));
+    const state = await State.findOne();
+    res.end(
+      JSON.stringify({
+        trends: newTrends,
+        avgHistory: state ? state._doc.avgHistory : [],
+      })
+    );
   } else {
     next();
   }

@@ -1,13 +1,14 @@
 import shortid from 'shortid';
 
-import { db } from '../db.js';
 import { getTrends } from './getTrends.js';
 import { searchTweets } from './searchTweets.js';
 import { analyzeTweets } from './analyzeTweets.js';
+import { Trend } from '../models/trend.js';
+import { State } from '../models/state.js';
 
 export const updateDb = async (opts) => {
-  const lastUpdated = db.get('lastUpdated').value();
-  const started = Date.now();
+  const state = await State.findOne();
+  const lastUpdated = state ? state._doc.updated : 0;
   console.log(lastUpdated);
 
   // If this script is being run at start up make sure it hasn't been run in the last 5 minutes
@@ -16,7 +17,9 @@ export const updateDb = async (opts) => {
   }
 
   const trends = await getTrends();
-  db.set('trending', trends).write();
+  const twitterTrends = trends.trends.reduce((trendObj, trend) => {
+    return { ...trendObj, [trend.name]: trend };
+  }, {});
 
   const tweetPromises = trends.trends.map(async (trend) => {
     const tweets = await searchTweets(trend.name);
@@ -25,59 +28,59 @@ export const updateDb = async (opts) => {
 
   const tweetSwearches = await Promise.all(tweetPromises);
 
-  const recordsToSet = [];
-  tweetSwearches.forEach((search, i) => {
+  const namesAdded = [];
+  let scoreTotal = 0;
+  const dbUpdates = tweetSwearches.map(async (search, i) => {
     const analyzedData = analyzeTweets(search.statuses);
     if (analyzedData) {
-      // Check for a past record for this analyzed data
-      const pastRecord = db.get('trends').find({ name: search.name }).value();
+      const tweetVolume = twitterTrends[search.name].tweet_volume;
+      const { createdAt, scoreAvgHistory, ...rest } = analyzedData;
+      const existingTrend = await Trend.findOneAndUpdate(
+        { name: search.name },
+        {
+          $set: { ...rest, tweetVolume },
+          $addToSet: {
+            scoreAvgHistory: {
+              scoreAvg: rest.scoreAvg,
+              createdAt,
+            },
+          },
+        }
+      );
 
-      // If the past record exists update that object with new data, add the avg histories together
-      if (pastRecord) {
-        const newRecord = {
-          ...pastRecord,
+      if (!existingTrend) {
+        const newTrend = new Trend({
           ...analyzedData,
-          scoreAvgHistory: [
-            ...pastRecord.scoreAvgHistory,
-            ...analyzedData.scoreAvgHistory,
-          ],
-          createdAt: pastRecord.createdAt,
-        };
-        recordsToSet.push(newRecord);
-      } else {
-        recordsToSet.push({
-          id: shortid.generate(),
+          tweetVolume,
           name: search.name,
-          ...analyzedData,
+          id: shortid.generate(),
         });
+        await newTrend.save();
       }
+
+      namesAdded.push(search.name);
+      scoreTotal += analyzedData.scoreAvg;
     }
+    return;
   });
 
-  let total = 0;
+  await Promise.all(dbUpdates);
+  console.log('Added these trends to DB - ', namesAdded);
 
-  // Setting the new trends
-  db.set('trends', []).write();
-  recordsToSet.forEach((record) => {
-    total += record.scoreAvg;
-    db.get('trends').push(record).write();
-  });
-  db.set('lastUpdated', started).write();
+  await Trend.deleteMany({ name: { $nin: namesAdded } });
+  console.log('DB update done');
 
-  // Add to the history average and set in db
-  const avgHistory = db.get('avgHistory').value();
-  if (avgHistory.length === 100) {
-    avgHistory.splice(0, 1);
-  }
-  const average = total / recordsToSet.length;
-
-  if (average) {
-    avgHistory.push({
-      avg: total / recordsToSet.length,
-      createdAt: Date.now(),
-    });
-  }
-  db.set('avgHistory', avgHistory).write();
+  const scoreAvg = scoreTotal / (namesAdded.length || 1);
+  console.log(scoreAvg);
+  const updateTime = Date.now();
+  await State.findOneAndUpdate(
+    {},
+    {
+      updated: updateTime,
+      $addToSet: { avgHistory: { scoreAvg, time: updateTime } },
+    },
+    { upsert: true }
+  );
 
   return;
 };

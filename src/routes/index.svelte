@@ -5,7 +5,6 @@
         return r.json();
       })
       .then(data => {
-        // const trends = Object.keys(data.trends).map(key => data.trends[key]);
         return { trends: data.trends, avgHistory: data.avgHistory };
       });
   }
@@ -92,11 +91,11 @@
         <Card>
           <LineChart
             data={avgHistory}
-            xKey="createdAt"
+            xKey="time"
             xDataTransform={data => {
               return new Date(data).toLocaleTimeString();
             }}
-            yKey="avg"
+            yKey="scoreAvg"
             height="400px"
             title="Average sentiment" />
         </Card>
