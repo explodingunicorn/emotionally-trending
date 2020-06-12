@@ -73,11 +73,19 @@ export const updateDb = async (opts) => {
   const scoreAvg = scoreTotal / (namesAdded.length || 1);
   console.log(scoreAvg);
   const updateTime = Date.now();
+
+  const pop =
+    state && state._doc.avgHistory.length === 50
+      ? {
+          $pop: { avgHistory: -1 },
+        }
+      : {};
   await State.findOneAndUpdate(
     {},
     {
       updated: updateTime,
       $addToSet: { avgHistory: { scoreAvg, time: updateTime } },
+      ...pop,
     },
     { upsert: true }
   );
