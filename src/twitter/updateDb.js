@@ -79,16 +79,24 @@ export const updateDb = async (opts) => {
       ? {
           $pop: { avgHistory: -1 },
         }
-      : {};
+      : false;
   await State.findOneAndUpdate(
     {},
     {
       updated: updateTime,
       $addToSet: { avgHistory: { scoreAvg, time: updateTime } },
-      ...pop,
     },
     { upsert: true }
   );
+
+  if (pop) {
+    await State.findOneAndUpdate(
+      {},
+      {
+        ...pop,
+      }
+    );
+  }
 
   return;
 };
