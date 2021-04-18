@@ -11,10 +11,12 @@ const dev = NODE_ENV === 'development';
 
 const mongoConnectStr =
   MONGO_URL && MONGO_USER_PWD
-    ? `mongodb://${MONGO_USER_PWD}@${MONGO_URL}`
+    ? `mongodb+srv://${MONGO_USER_PWD}@${MONGO_URL}`
     : 'mongodb://localhost:27017';
 
-mongoose.connect(mongoConnectStr, {
+console.log(mongoConnectStr);
+
+mongoose.connect(encodeURI(mongoConnectStr), {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
