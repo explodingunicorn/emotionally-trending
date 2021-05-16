@@ -12,7 +12,7 @@ const updateDb = async (opts) => {
   console.log(lastUpdated);
 
   // If this script is being run at start up make sure it hasn't been run in the last 5 minutes
-  if (opts && opts.startUp && Date.now() - lastUpdated <= 300000) {
+  if (opts && opts.startUp && Date.now() - lastUpdated <= 240000) {
     return;
   }
 
