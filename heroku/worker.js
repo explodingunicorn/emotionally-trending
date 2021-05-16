@@ -1,5 +1,36 @@
 const amqp = require('amqp-connection-manager');
-const { getTwitterData } = require('./getTwitterData');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const { updateDb } = require('../src/twitter/updateDb');
+
+dotenv.config();
+
+const { MONGO_URL, MONGO_USER_PWD } = process.env;
+
+const mongoConnectStr =
+  MONGO_URL && MONGO_USER_PWD
+    ? `mongodb+srv://${MONGO_USER_PWD}@${MONGO_URL}`
+    : 'mongodb://localhost:27017';
+
+console.log(mongoConnectStr);
+
+mongoose.connect(encodeURI(mongoConnectStr), {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const getTweets = () => {
+  return new Promise((resolve) => {
+    console.log('Opening DB');
+    const db = mongoose.connection;
+
+    if (db.readyState) {
+      console.log('Getting twitter data');
+      updateDb({ startUp: true }).then(resolve).catch(resolve);
+    }
+  });
+};
 
 const AMQP_URL = process.env.CLOUDAMQP_URL || 'amqp://localhost';
 if (!AMQP_URL) process.exit(1);
@@ -44,7 +75,7 @@ channelWrapper
   });
 
 // Process message from AMQP
-function onMessage(data) {
+async function onMessage(data) {
   let message;
   try {
     message = JSON.parse(data.content.toString());
@@ -60,7 +91,7 @@ function onMessage(data) {
 
   switch (message.taskName) {
     case 'getTweets':
-      getTwitterData();
+      await getTweets();
       break;
 
     default:
