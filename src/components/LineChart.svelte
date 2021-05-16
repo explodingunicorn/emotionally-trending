@@ -5,9 +5,9 @@
   export let height = '200px';
   export let data;
   export let xKey;
-  export let xDataTransform = data => data;
+  export let xDataTransform = (data) => data;
   export let yKey;
-  export let yDataTransform = data => data;
+  export let yDataTransform = (data) => data;
   export let title;
   let canvasEl;
   let chart;
@@ -15,7 +15,7 @@
   let yData = [];
   let colors;
 
-  data.forEach(point => {
+  data.forEach((point) => {
     labels.push(xDataTransform(point[xKey]));
     yData.push(yDataTransform(point[yKey]));
   });

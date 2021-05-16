@@ -1,10 +1,10 @@
 <script context="module">
   export function preload({ params, query }) {
     return this.fetch(`trends.json`)
-      .then(r => {
+      .then((r) => {
         return r.json();
       })
-      .then(data => {
+      .then((data) => {
         return { trends: data.trends, avgHistory: data.avgHistory };
       });
   }
@@ -24,7 +24,7 @@
   export let trends;
   export let avgHistory;
 
-  let filteredTrends = trends.filter(trend => trend.tweetVolume);
+  let filteredTrends = trends.filter((trend) => trend.tweetVolume);
   let baseArrSize = 9;
   let baseArr = new Array(baseArrSize);
 
@@ -92,12 +92,13 @@
           <LineChart
             data={avgHistory}
             xKey="time"
-            xDataTransform={data => {
+            xDataTransform={(data) => {
               return new Date(data).toLocaleTimeString();
             }}
             yKey="scoreAvg"
             height="400px"
-            title="Average sentiment" />
+            title="Average sentiment"
+            nominal={false} />
         </Card>
       </div>
     </Grid>

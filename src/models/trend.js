@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 
 const tweetStructure = {
   id: 'number',
@@ -43,4 +43,8 @@ const TrendSchema = new Schema({
   tweetVolume: 'number',
 });
 
-export const Trend = model('Trend', TrendSchema);
+const Trend = model('Trend', TrendSchema);
+
+module.exports = {
+  Trend,
+};

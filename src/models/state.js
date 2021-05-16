@@ -1,8 +1,12 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 
 const StateSchema = new Schema({
   updated: 'number',
   avgHistory: [{ scoreAvg: 'number', time: 'number' }],
 });
 
-export const State = model('State', StateSchema);
+const State = model('State', StateSchema);
+
+module.exports = {
+  State,
+};

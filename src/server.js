@@ -1,10 +1,11 @@
 import sirv from 'sirv';
 import polka from 'polka';
+import * as dotenv from 'dotenv';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
-import cron from 'node-cron';
 import mongoose from 'mongoose';
-import { updateDb } from './twitter/updateDb';
+
+dotenv.config();
 
 const { PORT, NODE_ENV, MONGO_URL, MONGO_USER_PWD } = process.env;
 const dev = NODE_ENV === 'development';
@@ -29,13 +30,6 @@ const main = () => {
   });
 
   db.once('open', async () => {
-    await updateDb({ startUp: true });
-    console.log('updated db before server');
-
-    cron.schedule('*/5 * * * *', async () => {
-      await updateDb();
-    });
-
     polka() // You can also use Express
       .use(
         compression({ threshold: 0 }),

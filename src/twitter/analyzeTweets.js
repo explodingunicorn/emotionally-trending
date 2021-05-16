@@ -1,16 +1,16 @@
-import * as Sentiment from "sentiment";
+const Sentiment = require('sentiment');
 
 const sentiment = new Sentiment();
 const options = {
   extras: {
     no: 0,
     yes: 0,
-    like: 0
-  }
+    like: 0,
+  },
 };
 
 const countWords = (words, wordDict) => {
-  words.forEach(word => {
+  words.forEach((word) => {
     if (!wordDict[word]) {
       wordDict[word] = 1;
     } else {
@@ -19,9 +19,9 @@ const countWords = (words, wordDict) => {
   });
 };
 
-const getMostUsedWords = wordDict => {
+const getMostUsedWords = (wordDict) => {
   const wordArr = [];
-  Object.keys(wordDict).forEach(word => {
+  Object.keys(wordDict).forEach((word) => {
     wordArr.push({ word, count: wordDict[word] });
   });
 
@@ -36,7 +36,7 @@ const getMostUsedWords = wordDict => {
 };
 
 // A function that will analyze an array of tweets from the twitter api: https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
-export const analyzeTweets = tweets => {
+const analyzeTweets = (tweets) => {
   let scoreCount = 0,
     comparativeCount = 0;
   const positiveWordDict = {};
@@ -47,7 +47,7 @@ export const analyzeTweets = tweets => {
   }
 
   // Loop over each tweest and return some analyzed data from the tweets
-  const data = tweets.map(tweet => {
+  const data = tweets.map((tweet) => {
     const { score, comparative, positive, negative } = sentiment.analyze(
       tweet.full_text,
       options
@@ -67,10 +67,10 @@ export const analyzeTweets = tweets => {
       user: {
         id: tweet.user.id,
         name: tweet.user.name,
-        screenName: tweet.user.screen_name
+        screenName: tweet.user.screen_name,
       },
       retweetCount: tweet.retweet_count,
-      favoriteCounte: tweet.favorite_count
+      favoriteCounte: tweet.favorite_count,
     };
   });
 
@@ -93,6 +93,10 @@ export const analyzeTweets = tweets => {
     positiveWords: getMostUsedWords(positiveWordDict),
     negativeWords: getMostUsedWords(negativeWordDict),
     scoreAvgHistory: [{ scoreAvg, time: currentTime }],
-    createdAt: currentTime
+    createdAt: currentTime,
   };
+};
+
+module.exports = {
+  analyzeTweets,
 };

@@ -12,13 +12,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    overflow: hidden;
   }
 
   .block-container {
     border: 1px solid var(--black-transparent);
     background-color: var(--gray);
     display: inline-block;
-    margin-left: 8px;
+    margin-right: 8px;
     position: relative;
     width: 50px;
     height: 3px;
@@ -39,13 +40,17 @@
   .block.positive {
     background-color: var(--green);
   }
+
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 </style>
 
 <div>
   <small>{title}</small>
   {#each words as word}
     <div class="word-container">
-      <span>{word.word}</span>
       <div class="block-container">
         <div
           class="block"
@@ -53,6 +58,7 @@
           class:negative
           style="width: {(word.count / max) * 100}%" />
       </div>
+      <span>{word.word}</span>
     </div>
   {/each}
 </div>
