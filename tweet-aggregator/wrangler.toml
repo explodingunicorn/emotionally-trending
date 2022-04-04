@@ -1,0 +1,19 @@
+name = "twitter-job"
+type = "javascript"
+
+account_id = "26a870dc92c3659584d4aa1554500342"
+workers_dev = true
+
+[build]
+command = "npm run build"
+
+[build.upload]
+dir = "build"
+main = "./index.mjs"
+format = "modules"
+
+# [secrets]
+# VITE_REALM_APPID
+# VITE_REALM_API_KEY
+# C_KEY
+# C_SECRET
